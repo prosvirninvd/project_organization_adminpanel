@@ -1,0 +1,79 @@
+*, *::after, *::before {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+html {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+}
+header {
+    width: 100%;
+    height: 100px;
+}
+footer {
+    width: 100%;
+    height: 100px;
+}
+body {
+    width: 100%;
+    height: 100%;
+}
+main {
+    width: 100%;
+    min-height: calc(100% - 200px);
+    display: flex;
+    gap: 30px;
+    
+}
+.menu {
+    width: auto;
+    
+}
+.table-output p {
+    text-align: center;
+}
+table {
+    border-radius: 5px;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td input {
+    border: none;
+    width: 100%;
+    font-size: 14px;
+    height: 100%;
+    background-color: unset;
+    color: darkgreen;
+}
+td input:disabled {
+    color: black;
+}
+th{
+    height: 30px;
+    font-size: 16px;
+}
+tr td {
+    height: 30px;
+    font-size: 14px;
+    padding: 0 5px;
+}
+button.update-button {
+    background-color: lightgray;
+    border: 1px solid black;
+    padding: 5px;
+    transition: color 0.2s;
+}
+button.delete-button {
+    background-color: red;
+    border: 1px solid black;
+    padding: 5px;
+    transition: color 0.2s;
+}
+button.delete-button:hover, button.update-button:hover {
+    color: darkslategray;
+}
