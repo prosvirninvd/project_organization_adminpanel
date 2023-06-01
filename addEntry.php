@@ -1,7 +1,12 @@
 <?php
 $arr = $_POST['value'];
 $keyarr = array_keys($arr);
-$valuearr = array_values($arr); 
+$valuearr = array_map('htmlspecialchars',array_map('trim', array_values($arr)));
+foreach ($valuearr as $value) {
+    if ($value == '') {
+        exit();
+    }
+}
 $pk_name = $keyarr[0];
 $pk_value = $valuearr[0];
 $table_name = $_POST['table-name'];

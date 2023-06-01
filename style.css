@@ -74,6 +74,12 @@ button.delete-button {
     padding: 5px;
     transition: color 0.2s;
 }
-button.delete-button:hover, button.update-button:hover {
-    color: darkslategray;
+button.data-input {
+    background-color: lime;
+    border: 1px solid black;
+    padding: 5px;
+    transition: color 0.2s;
+}
+button:hover {
+    color: grey;
 }

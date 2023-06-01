@@ -35,6 +35,7 @@ addButton.addEventListener('click', async function addClick(event) {
             cell.appendChild(deleteButton);
             tableRow.appendChild(cell);
             refreshButtons();
+            
         }
     });
 let enableclick = false;

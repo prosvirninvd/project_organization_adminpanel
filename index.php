@@ -68,7 +68,7 @@
                     foreach ($table_body as $table_row) {
                         foreach ($table_row as $table_data) {
                             if (str_starts_with($table_data, 'id_')) {
-                                echo("<td><input name='value[$table_data]' disabled></td>");
+                                echo("<td><input name='value[$table_data]' required disabled></td>");
                             }
                             else echo("<td><input name='value[$table_data]' required></td>");
                         }
