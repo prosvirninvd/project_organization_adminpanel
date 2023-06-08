@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    if (isset($_GET['logout'])){
+        unset($_SESSION['login-user']);
+        header("location:index.php");
+    }
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,31 +17,38 @@
 </head>
 <body>
     <header>
-    <h1>Админка</h1>
+    <h1><?php
+            if (!isset($_SESSION['login-user'])) {
+                echo 'Авторизуйтесь</h1>';
+            }
+            else {
+                echo "Админка</h1><p><a href='?logout=true'>Выйти</a></p>";
+            }
+        ?>
+    
     </header>
     <main>
-        <div class="menu">
-            <p>Таблицы</p>
+        
             <?php
-        require_once('config.php');
-    $connection_schema = mysqli_connect(host, user, password, schema);
-    if (!$connection_schema) exit();
-    $result = mysqli_query($connection_schema,"select table_name from ".schema.".tables where table_schema = '".database."';");
-    echo("<ul class='table-list'>");
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<li><a href='index.php?table=$row[table_name]'>$row[table_name]</a></li>";
-    }
-    echo('</ul>');
-    mysqli_close($connection_schema);
-    ?>
-        </div>
-        <div class="table-output">
-            <?php
+            if (isset($_SESSION['login-user'])) {
+                echo '<div class="menu">
+                <p>Таблицы</p>';
+                require_once('config.php');
+                $connection_schema = mysqli_connect(host, user, password, "information_schema");
+                if (!$connection_schema) exit();
+                $result = mysqli_query($connection_schema,"select table_name from information_schema.tables where table_schema = '".database."';");
+                echo("<ul class='table-list'>");
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<li><a href='index.php?table=$row[table_name]'>$row[table_name]</a></li>";
+                }
+                echo('</ul></div>');
+                mysqli_close($connection_schema);
+                echo '<div class="table-output">';
                 if (!empty($_GET['table'])) {
                     $table_name = $_GET['table'];
-                    $connection_schema = mysqli_connect(host, user, password, schema);
+                    $connection_schema = mysqli_connect(host, user, password, "information_schema");
                     if (!$connection_schema) exit();
-                    $result = mysqli_query($connection_schema, "select column_name from ".schema.".columns where table_schema = '".database."' and table_name = '$table_name';");
+                    $result = mysqli_query($connection_schema, "select column_name from information_schema.columns where table_schema = '".database."' and table_name = '$table_name';");
                     echo("<form action='#' method='post' id='table-form'>");
                     echo("<input name='table-name' value='$table_name' readonly />");
                     echo("<table>");
@@ -58,32 +72,53 @@
                         echo("<td><button class='update-button'>Обновить</button><button class='delete-button' onclick='onDeleteClick(this);'>Удалить</button></td>");
                         echo("</tr>");
                     }
-                    
-                    mysqli_close($conn);
                     echo("</tbody>");
                     echo("<tfoot>");
                     echo("<tr>");
-                    $result = mysqli_query($connection_schema, "select column_name from ".schema.".columns where table_schema = '".database."' and table_name = '$table_name';");
+                    $result = mysqli_query($connection_schema, "select column_name from information_schema.columns where table_schema = '".database."' and table_name = '$table_name';");
                     $table_body = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     foreach ($table_body as $table_row) {
                         foreach ($table_row as $table_data) {
-                            if (str_starts_with($table_data, 'id_')) {
+                            if (str_ends_with($table_data, '_id')) {
+                                echo("<td>");
+                                $get_table = mysqli_query($connection_schema, "SELECT referenced_table_name, referenced_column_name
+                                FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'db_project_organization' AND TABLE_NAME = '$table_name' and column_name = '$table_data' and referenced_table_name is not null and referenced_column_name is not null;");
+                                $table_result = mysqli_fetch_array($get_table);
+                                $option_ids = mysqli_query($conn, "SELECT $table_result[1] from $table_result[0]");
+                                $ids = mysqli_fetch_all($option_ids);
+                                echo "<select name='value[$table_data]'>";
+                                echo("<option value='0' disabled selected>0</option>");
+                                foreach ($ids as $id_value) {
+                                   echo("<option value='$id_value[0]'>$id_value[0]</option>");
+                                }
+                                echo("</select></td>");
+                            }
+                            elseif (str_starts_with($table_data, 'id_')) {
                                 echo("<td><input name='value[$table_data]' required disabled></td>");
                             }
                             else echo("<td><input name='value[$table_data]' required></td>");
                         }
                     }
                     echo("<td><button class='data-input' type='submit' id='input-insert' form='table-form'>Добавить</button></td>");
+                    mysqli_close($conn);
                     $connection_schema->close();
                     echo("</tr>");
                     echo("</tfoot>");
                     echo("</table>");
                     echo("</form>");
                 }
-                
-            
+                echo "</div>";
+            }
+            else {
+                echo "<div class='auth'>";
+                    echo '<form id="form-auth" action="auth.php" method="post">
+                    <input type="text" name="input-login" id="input-login" placeholder="Логин" required><br>
+                    <input type="password" name="input-password" id="input-password" placeholder="Пароль" required><br>
+                    <input type="submit" name="input-sign-in" id="input-sign-in" value="Войти">
+                </form>';
+                echo "</div>";
+            }
             ?>
-        </div>
     </main>
     <footer>
         

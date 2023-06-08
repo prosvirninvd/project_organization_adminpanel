@@ -1,10 +1,23 @@
+const btn = document.getElementById('input-sign-in');
+const authForm = document.getElementById('form-auth');
+if (btn != null) {
+    btn.addEventListener('click', event => {
+        event.preventDefault();
+        let authFormData = new FormData(authForm);
+        fetch(authForm.action, {method: authForm.method, body: authFormData}).then(response => {console.log(response.text())});
+        window.location.href = window.location.href.split('?')[0];
+    });
+}
+
+
+
 let form = document.getElementById('table-form');
 let addButton = document.getElementById('input-insert');
 let tableBody =document.getElementById('table-body');
 
 let updateButtons = document.querySelectorAll('button.update-button');
 let deleteButtons = document.querySelectorAll('button.delete-button');
-
+if (addButton != null) {
 addButton.addEventListener('click', async function addClick(event) {
     event.preventDefault();
     let formData = new FormData(form);
@@ -38,6 +51,7 @@ addButton.addEventListener('click', async function addClick(event) {
             
         }
     });
+}
 let enableclick = false;
 
 function refreshButtons() {

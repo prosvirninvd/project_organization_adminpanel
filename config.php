@@ -3,5 +3,6 @@ define('host', 'localhost');
 define('user', 'root');
 define('password', '');
 define('database', 'db_project_organization');
-define('schema','information_schema');
+define('auth_db','pi226_prosvirnin_2023-04-11');
+
 ?>
