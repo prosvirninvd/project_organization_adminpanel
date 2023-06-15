@@ -51,7 +51,7 @@
                     $result = mysqli_query($connection_schema, "select column_name from information_schema.columns where table_schema = '".database."' and table_name = '$table_name';");
                     echo("<form action='#' method='post' id='table-form'>");
                     echo("<input name='table-name' value='$table_name' readonly />");
-                    echo("<table>");
+                    echo("<table class='data-table'>");
                     echo("<thead>");
                     echo("<tr>");
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -86,8 +86,8 @@
                                 $table_result = mysqli_fetch_array($get_table);
                                 $option_ids = mysqli_query($conn, "SELECT $table_result[1] from $table_result[0]");
                                 $ids = mysqli_fetch_all($option_ids);
-                                echo "<select name='value[$table_data]'>";
-                                echo("<option value='0' disabled selected>0</option>");
+                                echo "<select name='value[$table_data]' required>";
+                                echo("<option value='' disabled selected></option>");
                                 foreach ($ids as $id_value) {
                                    echo("<option value='$id_value[0]'>$id_value[0]</option>");
                                 }
